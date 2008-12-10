@@ -1,0 +1,4 @@
+76c76
+< INSTALL_NAME = File.join(FRAMEWORK_USR_LIB, 'lib' + RUBY_SO_NAME + '.dylib')
+---
+> INSTALL_NAME = File.join( "@executable_path/../Frameworks", FRAMEWORK_NAME + '.framework', 'Versions', MACRUBY_VERSION, 'usr/lib', 'lib' + RUBY_SO_NAME + '.dylib')

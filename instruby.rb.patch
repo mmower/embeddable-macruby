@@ -1,0 +1,31 @@
+510a511,517
+>   
+>   # Install bridge support files
+>   dest_bs = File.join( resources, 'BridgeSupport' )
+>   mkdir_p dest_bs, :mode => 0755
+>   Dir.glob('/System/Library/Frameworks/**/BridgeSupport/*.dylib').each do |p|
+>     install p, dest_bs
+>   end
+519,520c526
+< touch_file = '/System/Library/Frameworks/.bridgesupport_dylib_gcmarked'
+< if ($destdir.empty? and File.exist?(touch_file)) or `sw_vers -productVersion`.strip.to_f >= 10.6
+---
+> if `sw_vers -productVersion`.strip.to_f >= 10.6
+530,535c536,543
+<   Dir.glob('/System/Library/Frameworks/**/BridgeSupport/*.dylib').each do |p|
+<     unless File.exist?(touch_file)
+<       unless system("./markgc '#{p}' >& /dev/null")
+<         $stderr.puts "cannot markgc #{p}"
+<         exit 1
+<       end
+---
+>   
+>   puts "Fixing bridge support dylibs in #{$destdir}"
+>   
+>   Dir.glob("#{$destdir}/Library/Frameworks/MacRuby.framework/Resources/BridgeSupport/*.dylib").each do |p|
+>     puts "patching: #{p}"
+>     unless system("./markgc '#{p}' >& /dev/null")
+>       $stderr.puts "cannot markgc #{p}"
+>       exit 1
+538a547
+>       puts dirname, p

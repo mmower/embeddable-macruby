@@ -1,0 +1,61 @@
+72a73
+>   
+75,76c76,80
+<     CFBundleRef bundle;
+< 
+---
+>     CFBundleRef appBundle = NULL;
+>     CFURLRef baseURL = NULL;
+>     CFURLRef frameworksURL = NULL;
+>     CFURLRef bundleURL = NULL;
+>     
+78,89c82,101
+<     bundle = CFBundleGetMainBundle();
+<     if (bundle != NULL) {
+<       CFURLRef url;
+< 
+<       url = CFBundleCopyResourceURL(bundle, CFSTR("BridgeSupport"), 
+<                                     NULL, NULL);
+<       if (url != NULL) {
+<         CFStringRef str = CFURLCopyPath(url);
+<         path = (char *)malloc(sizeof(char) * PATH_MAX);
+<         CFStringGetFileSystemRepresentation(str, path, PATH_MAX);
+<         CFRelease(str);
+<         CFRelease(url);
+---
+>     
+>     appBundle = CFBundleGetMainBundle();
+>     if( appBundle != NULL ) {
+>       baseURL = CFBundleCopyBundleURL( appBundle );
+>       if( baseURL != NULL ) {
+>         CFStringRef frameworksPath = NULL;
+>         frameworksPath = CFURLCopyPath( CFBundleCopyPrivateFrameworksURL( appBundle ) );
+>         frameworksURL = CFURLCreateCopyAppendingPathComponent( kCFAllocatorDefault, baseURL, frameworksPath, false );
+>         if( frameworksURL != NULL ) {
+>           bundleURL = CFURLCreateCopyAppendingPathComponent( kCFAllocatorDefault, frameworksURL, CFSTR( "MacRuby.framework" ), false );
+>           if( bundleURL != NULL ) {
+>             CFStringRef str = CFURLCopyPath( bundleURL );
+>             path = (char *)malloc(sizeof(char) * PATH_MAX);
+>             CFStringGetFileSystemRepresentation( str, path, PATH_MAX );
+>             CFRelease( str );
+>             CFRelease( bundleURL );
+>           }
+>           CFRelease( frameworksURL );
+>           CFRelease( frameworksPath );
+>         }
+92a105
+>   
+103c116
+< 
+---
+>   
+123c136
+<     snprintf(path, path_len, "%s/%s.%s", main_bundle_bs_path,
+---
+>     snprintf(path, path_len, "%s/Resources/BridgeSupport/%s.%s", main_bundle_bs_path,
+127c140,142
+< 
+---
+>   
+>   printf( "Not found\n" );
+>   
