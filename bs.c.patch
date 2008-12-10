@@ -53,9 +53,7 @@
 <     snprintf(path, path_len, "%s/%s.%s", main_bundle_bs_path,
 ---
 >     snprintf(path, path_len, "%s/Resources/BridgeSupport/%s.%s", main_bundle_bs_path,
-127c140,142
+127c140
 < 
 ---
->   
->   printf( "Not found\n" );
 >   
